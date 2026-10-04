@@ -2,6 +2,8 @@
 
 아이폰에서 가볍게 돌아가는 **컬러 3D 로우폴리 1인칭 스나이퍼 게임**입니다. 옥상에서 스코프로 조준하고, 숨을 참은 채 한 발로 임무를 끝냅니다.
 
+**▶ 플레이: https://ksjung71.github.io/sniper-mission/** (아이폰 Safari → 공유 → 홈 화면에 추가하면 앱처럼 설치, 오프라인 실행)
+
 - 엔진: Three.js r185(로컬 vendoring)에 순수 ES module을 씁니다. 빌드 도구는 없습니다.
 - 용량: 배포물 전체 약 1.2MB입니다(three.js 750KB + 게임 코드 170KB + 아이콘).
 - 설치: App Store 없이 설치합니다. GitHub Pages(HTTPS)에 올린 뒤 Safari "홈 화면에 추가"로 앱처럼 설치하고, 오프라인에서도 실행됩니다.
