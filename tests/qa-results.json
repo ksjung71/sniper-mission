@@ -1,0 +1,2651 @@
+{
+  "runAt": "2026-10-04T15:29:47.892Z",
+  "summary": {
+    "pass": 16,
+    "fail": 0,
+    "skip": 0
+  },
+  "scenarios": [
+    {
+      "id": 1,
+      "name": "부팅",
+      "status": "pass",
+      "runAt": "2026-10-04T15:26:29.194Z",
+      "durationMs": 3892,
+      "details": [
+        {
+          "type": "note",
+          "text": "부팅 시간(Chrome 실행 포함) 696ms"
+        },
+        {
+          "type": "check",
+          "label": "상태 TITLE",
+          "ok": true,
+          "expected": "TITLE",
+          "actual": "TITLE",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "시작 버튼 [data-ui=start] 표시",
+          "ok": true,
+          "expected": "보이고 가려지지 않음",
+          "actual": "ok",
+          "suspects": [
+            "hud",
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "버전 텍스트(1.1.1) 표시",
+          "ok": true,
+          "expected": "#hud 텍스트에 1.1.1",
+          "actual": "⚙ 설정 스나이퍼 미션 SNIPER MISSION 탭하여 시작 가로 화면 전용 · 소리를 켜고 플레이하세요 v1.1.1",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "타이틀 문구(\"스나이퍼\") 표시",
+          "ok": true,
+          "expected": "타이틀 화면에 게임 이름",
+          "actual": "⚙ 설정 스나이퍼 미션 SNIPER MISSION 탭하여 시작 가로 화면 전용 · 소리를 켜고 플레이하세요 v1.1.1",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "가로 화면에서 #rotate 숨김",
+          "ok": true,
+          "actual": "숨김",
+          "suspects": [
+            "html",
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "콘솔 에러·pageerror·4xx·요청 실패 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "main",
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "CSS 금지 규칙(@keyframes·animation·backdrop-filter·mix-blend-mode) 없음 — CONTRACT §11",
+          "ok": true,
+          "actual": "없음(2개 스타일 검사)",
+          "suspects": [
+            "css"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-title.png"
+      ],
+      "repro": [
+        "iPhone 가로 프로필(844×390, DPR 3, 터치)로 `?autotest&nosw&seed=1` 접속",
+        "2.5초 대기하며 콘솔 에러·pageerror·4xx 응답·요청 실패 수집",
+        "`__SNIPER__.state()`가 TITLE인지, 타이틀 문구·`[data-ui=start]`·버전 텍스트가 보이는지 확인"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "세로 화면",
+      "status": "pass",
+      "runAt": "2026-10-04T15:26:33.028Z",
+      "durationMs": 3833,
+      "details": [
+        {
+          "type": "note",
+          "text": "세로 뷰포트 미디어쿼리: orientation:portrait=true, pointer:coarse=true"
+        },
+        {
+          "type": "check",
+          "label": "세로(390×844): #rotate 표시",
+          "ok": true,
+          "expected": "보임",
+          "actual": "ok",
+          "suspects": [
+            "css",
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "가로(844×390): #rotate 숨김",
+          "ok": true,
+          "expected": "숨김",
+          "actual": "숨김",
+          "suspects": [
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "플레이 중 세로 전환 → PAUSED",
+          "ok": true,
+          "expected": "PAUSED",
+          "actual": "PAUSED",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "가로 복귀 후 ui:resume → PLAYING",
+          "ok": true,
+          "expected": "PLAYING",
+          "actual": "PLAYING",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "css",
+            "html",
+            "main"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-portrait.png"
+      ],
+      "repro": [
+        "iPhone 프로필로 `?autotest&nosw&seed=1` 접속 후 뷰포트를 390×844 세로(터치)로 변경",
+        "`#rotate` 표시 확인 → 844×390 가로로 되돌려 숨김 확인",
+        "`startStage(1)` 후 세로로 바꾸면 PAUSED, 가로 복귀 후 `ui:resume` → PLAYING 확인"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "실제 터치 흐름",
+      "status": "pass",
+      "runAt": "2026-10-04T15:26:36.847Z",
+      "durationMs": 3819,
+      "details": [
+        {
+          "type": "check",
+          "label": "시작 상태 TITLE",
+          "ok": true,
+          "actual": "TITLE",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "타이틀 [data-ui=start] 탭",
+          "ok": true,
+          "expected": "보이는 시작 버튼",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "start 탭 → SELECT",
+          "ok": true,
+          "actual": "SELECT",
+          "suspects": [
+            "hud",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "선택 화면: [data-stage=\"1\"] 표시",
+          "ok": true,
+          "actual": "ok",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "스테이지 1 열림",
+          "ok": true,
+          "expected": "잠기지 않음",
+          "actual": "열림",
+          "suspects": [
+            "hud",
+            "storage"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "스테이지 2 잠김 표시(disabled/aria-disabled/.locked/data-locked/🔒)",
+          "ok": true,
+          "expected": "잠김",
+          "actual": "button.card.locked[data-stage=2] \"02\n노을 부두\n항구 · 순찰 표적\n★★★\n🔒 잠김\"",
+          "suspects": [
+            "hud",
+            "storage"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "잠긴 스테이지 2 탭 → 브리핑으로 넘어가지 않음",
+          "ok": true,
+          "expected": "선택 화면 유지",
+          "actual": "선택 화면 아님",
+          "suspects": [
+            "hud",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "[data-stage=\"1\"] 탭",
+          "ok": true,
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "브리핑: [data-ui=begin] 표시",
+          "ok": true,
+          "actual": "ok",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "stage1 탭 → BRIEFING",
+          "ok": true,
+          "actual": "BRIEFING",
+          "suspects": [
+            "hud",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "[data-ui=begin] 탭",
+          "ok": true,
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "begin 탭 → PLAYING",
+          "ok": true,
+          "actual": "PLAYING",
+          "suspects": [
+            "hud",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "PLAYING 진입: [data-btn=fire] 표시",
+          "ok": true,
+          "expected": "인게임 HUD",
+          "actual": "ok",
+          "suspects": [
+            "hud",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 인게임 버튼 fire/scope/zoom/breath/reload/pause 표시",
+          "ok": true,
+          "actual": "모두 보임",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "S1에서 [data-btn=nv]: 숨김"
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "hud",
+            "input",
+            "css"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-touch-select.png",
+        "screenshots/qa-touch-briefing.png",
+        "screenshots/qa-touch-playing.png"
+      ],
+      "repro": [
+        "`?autotest&nosw&seed=1` 접속 → `resetProgress()` + localStorage 비우기 (autotest는 실제 진행 상황을 표시, 전 스테이지 해제 표시는 `?debug` 단독일 때만)",
+        "`[data-ui=start]` 탭 → SELECT, `[data-stage=\"2\"]`가 잠겨 있고 탭해도 브리핑으로 넘어가지 않는지 확인",
+        "`[data-stage=\"1\"]` 탭 → BRIEFING → `[data-ui=begin]` 탭 → PLAYING, 인게임 버튼 `[data-btn=fire]` 등이 보이는지 확인"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "조작(스테이지 1)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:26:47.608Z",
+      "durationMs": 10761,
+      "details": [
+        {
+          "type": "check",
+          "label": "조준 드래그 시작점(버튼 아닌 곳) 확보",
+          "ok": true,
+          "suspects": [
+            "hud",
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "오른쪽 드래그 → yaw 감소",
+          "ok": true,
+          "expected": "감소(약 0.336rad)",
+          "actual": "yaw 0 → -0.336 (시작점 div.play)",
+          "suspects": [
+            "input",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "드래그 감도: 150px ≈ 150·fov/화면높이 (±40%)",
+          "ok": true,
+          "expected": "0.336rad",
+          "actual": "0.336rad",
+          "suspects": [
+            "input",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "SCOPE 탭 → 스코프 on, fov 감소",
+          "ok": true,
+          "expected": "scoped, fov≈8",
+          "actual": "scoped=true, fov 50 → 8",
+          "suspects": [
+            "input",
+            "weapon",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "ZOOM 탭 → 줌 단계 증가, fov 감소",
+          "ok": true,
+          "expected": "zoomIdx 1, fov≈3.5",
+          "actual": "zoomIdx 0→1, fov 8 → 3.5",
+          "suspects": [
+            "input",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "FIRE 탭 → shot 이벤트",
+          "ok": true,
+          "expected": "shot 1개",
+          "actual": "shot 1개",
+          "suspects": [
+            "input",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "FIRE 탭 → 탄 −1",
+          "ok": true,
+          "expected": "5 → 4",
+          "actual": "5 → 4",
+          "suspects": [
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "1초 안 재탭 → 볼트로 발사 차단",
+          "ok": true,
+          "expected": "shot 0개, 탄 유지",
+          "actual": "재탭 180ms 뒤, shot 0개, mag 4→4",
+          "suspects": [
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "5발 소진 → reload start",
+          "ok": true,
+          "expected": "reload{phase:'start'}",
+          "actual": "추가 발사 4발, reload 이벤트 [\"start\",\"end\"]",
+          "suspects": [
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "reload end (약 2.2초 뒤)",
+          "ok": true,
+          "expected": "2.2s",
+          "actual": "2.2s",
+          "suspects": [
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "재장전 후 탄창 가득",
+          "ok": true,
+          "expected": "5",
+          "actual": "mag 5, reserve 5",
+          "suspects": [
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "input",
+            "weapon",
+            "hud"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`?autotest`로 접속 → `startStage(1)`, `assist({noSway:true,noDrop:true,noWind:true})`",
+        "버튼이 아닌 곳에서 오른쪽으로 150px 터치 드래그 → `weapon().view.yaw` 감소, 감도 = fov/화면높이",
+        "`[data-btn=scope]`, `[data-btn=zoom]` 탭 → fov 변화",
+        "인물에서 먼 지면을 `aimAt` → `[data-btn=fire]` 탭: mag −1, shot 이벤트 / 0.2초 뒤 재탭: 볼트로 차단",
+        "남은 탄을 모두 쏜 뒤 reload start/end 이벤트, 탄창 복구 확인"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "헤드샷(S1)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:26:50.077Z",
+      "durationMs": 2469,
+      "details": [
+        {
+          "type": "check",
+          "label": "필수 표적 존재",
+          "ok": true,
+          "suspects": [
+            "levels",
+            "ai"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "표적 t1 머리 [-18, 1.62, -75], 거리 99.5m (GDD §9.7: [−18, 1.62, −75], 약 100m)"
+        },
+        {
+          "type": "check",
+          "label": "hit 이벤트(대상 t1)",
+          "ok": true,
+          "expected": "hit t1",
+          "actual": "hit t1/head @[-17.98, 1.65, -74.88] dist 99.3m",
+          "suspects": [
+            "ballistics",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "hit.part === 'head'",
+          "ok": true,
+          "expected": "head",
+          "actual": "head",
+          "suspects": [
+            "ballistics"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "session.kills +1",
+          "ok": true,
+          "expected": "1",
+          "actual": "1",
+          "suspects": [
+            "session"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "t1.state === 'dead'",
+          "ok": true,
+          "actual": "dead",
+          "suspects": [
+            "ai"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "score 이벤트: HEADSHOT 99m 1599"
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "ballistics",
+            "weapon",
+            "session"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`startStage(1)`, `assist({noSway:true,noDrop:true,noWind:true})`, `scope(true,1)`",
+        "`aimAt(t1.head)` (GDD §9.7: [−18, 1.62, −75], 약 100m) → `fire()`",
+        "`events('hit')`의 agentId/part, `session().kills` +1, t1.state === 'dead' 확인"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "이동 표적 리드(S2)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:26:57.454Z",
+      "durationMs": 7377,
+      "details": [
+        {
+          "type": "check",
+          "label": "필수 표적 존재",
+          "ok": true,
+          "suspects": [
+            "levels"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "t1가 이동 시작(속도 > 0.5m/s, 15초 안)",
+          "ok": true,
+          "expected": "순찰 이동(GDD §9.2: 출발 전 wait 3초)",
+          "actual": "정지 상태 유지",
+          "suspects": [
+            "ai"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "이동 속도 (1.3, 0) m/s"
+        },
+        {
+          "type": "note",
+          "text": "시도 1: 거리 175m, 비행 0.206s, 속도 1.3m/s, 리드 0.289m → hit t1/body @[-35.47, 1.25, -149.76] dist 174.7m"
+        },
+        {
+          "type": "check",
+          "label": "리드 사격으로 이동 중인 t1 명중",
+          "ok": true,
+          "expected": "hit t1",
+          "actual": "hit",
+          "suspects": [
+            "ballistics",
+            "ai"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "ballistics",
+            "ai",
+            "weapon"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`startStage(2)`, `assist({noSway:true,noDrop:true,noWind:true})`, `scope(true,1)`",
+        "t1(z −150, x 방향 1.3m/s 순찰)이 걷기 시작하고 사선이 extras(컨테이너)·다른 인물에 막히지 않을 때까지 대기",
+        "조준점 = 가슴 + (vx,vz) × (거리/탄속 + 1/60초) → `aimAt` → `fire()` → hit.agentId === t1 확인 (GDD §9.7 리드 약 0.27m)"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "낙차(S4)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:27:00.970Z",
+      "durationMs": 3516,
+      "details": [
+        {
+          "type": "check",
+          "label": "S4 중력 > 0 (levels.js)",
+          "ok": true,
+          "actual": 4.9,
+          "suspects": [
+            "levels"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "t1 머리 [-32, 1.62, -176], 거리 199.4m, 비행 0.235s, 예측 낙차 0.135m (GDD: 199m, 0.14m)"
+        },
+        {
+          "type": "check",
+          "label": "낙차 보정 조준 → t1 명중",
+          "ok": true,
+          "expected": "hit t1",
+          "actual": "hit t1/head @[-31.98, 1.63, -175.87] dist 199.3m",
+          "suspects": [
+            "ballistics"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "낙차 보정 조준 → part 'head'",
+          "ok": true,
+          "expected": "head (보정 없으면 몸통)",
+          "actual": "head",
+          "suspects": [
+            "ballistics"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "명중점 y 1.632 vs 머리 중심 1.62 → 잔차 0.012m"
+        },
+        {
+          "type": "check",
+          "label": "실측 낙차 ≈ 0.5·g·t² (g3, 181.1m)",
+          "ok": true,
+          "expected": "0.111m (±0.04)",
+          "actual": "0.095m (part body)",
+          "suspects": [
+            "ballistics"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "ballistics"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`startStage(4)`, `assist({noSway:true,noWind:true,noDrop:false})`, `scope(true,1)`",
+        "t1(정지, 약 199m) 머리를 0.5·g·t²(t = 거리/탄속)만큼 위로 보정해 `aimAt` → `fire()` → part head (GDD §9.7: 낙차 0.14m)",
+        "대조: 경비 g3(정지) 가슴을 보정 없이 쏴서 실측 낙차(조준 y − 명중 y)를 예측값과 비교"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "민간인 오사(S3)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:27:05.341Z",
+      "durationMs": 4371,
+      "details": [
+        {
+          "type": "check",
+          "label": "S3 rules.civilianFail === true",
+          "ok": true,
+          "actual": true,
+          "suspects": [
+            "levels"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "정지한 민간인 존재",
+          "ok": true,
+          "suspects": [
+            "levels"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "민간인 c3 머리 [-12, 1.62, -124.5] (GDD §9.7: [−12, 1.62, −124.5])"
+        },
+        {
+          "type": "check",
+          "label": "민간인 c3 명중",
+          "ok": true,
+          "expected": "hit c3",
+          "actual": "hit c3/head @[-11.99, 1.63, -124.37] dist 145.8m",
+          "suspects": [
+            "ballistics"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "missionEnd{success:false, reason:'civilian'}",
+          "ok": true,
+          "expected": "success:false, reason:'civilian'",
+          "actual": "success:false, reason:civilian",
+          "suspects": [
+            "session"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "1.5초 뒤 RESULT 전환",
+          "ok": true,
+          "actual": "RESULT",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "결과 화면 [data-ui=retry] 표시",
+          "ok": true,
+          "actual": "ok",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "session",
+            "ballistics",
+            "hud"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-civilian-result.png"
+      ],
+      "repro": [
+        "`startStage(3)`, `assist({noSway:true,noDrop:true,noWind:true})`, `scope(true,1)`",
+        "정지한 민간인 c3 머리 [−12, 1.62, −124.5] 조준 → `fire()` (사선에 다른 인물이 있으면 비킬 때까지 대기)",
+        "`missionEnd{success:false, reason:'civilian'}`, RESULT 전환, `[data-ui=retry]` 표시 확인"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "경계(3m 착탄)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:27:07.038Z",
+      "durationMs": 1697,
+      "details": [
+        {
+          "type": "note",
+          "text": "표적 t1 @[-18, 0, -75], alertRadius 6"
+        },
+        {
+          "type": "note",
+          "text": "착탄 ground @[-15, 0, -75], 표적에서 3m"
+        },
+        {
+          "type": "check",
+          "label": "1.5초 안에 t1가 alert/flee",
+          "ok": true,
+          "expected": "≤ 1500ms",
+          "actual": "alert, 40ms",
+          "suspects": [
+            "ai"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "alert 이벤트(agentId t1) 발신",
+          "ok": true,
+          "actual": "alert 있음",
+          "suspects": [
+            "ai"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "ai",
+            "ballistics"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`startStage(1)`, `assist({noSway:true,noDrop:true,noWind:true})`",
+        "t1에서 3m 떨어진 지면(옆 또는 앞쪽, 다른 인물·extras와 사선이 겹치지 않는 지점) `aimAt` → `fire()`",
+        "impact가 t1에서 1.5~4.5m인지 확인 후, 착탄 시각부터 1.5초 안에 t1.state가 alert 또는 flee가 되는지 확인 (S1 alertRadius 6)"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "야간투시(S4)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:27:13.811Z",
+      "durationMs": 6773,
+      "details": [
+        {
+          "type": "check",
+          "label": "nv(true) → nv{on:true} 이벤트",
+          "ok": true,
+          "actual": "[{\"on\":true}]",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "NV 켜도 drawCalls 증가 ≤ 2",
+          "ok": true,
+          "expected": "≤ 24",
+          "actual": "22 → 22",
+          "suspects": [
+            "renderer",
+            "actors"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "NV off: 밝기 38.1, RGB 35.7,37.5,52 / NV on: 밝기 43.2, RGB 23.8,51.1,21.8, 평균 차이 20.62"
+        },
+        {
+          "type": "check",
+          "label": "NV 켜면 화면이 바뀜(평균 픽셀 차이 > 4)",
+          "ok": true,
+          "actual": 20.62,
+          "suspects": [
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "NV 화면이 녹색 톤(G > R·1.15, G > B·1.15)",
+          "ok": true,
+          "expected": "녹색 우세",
+          "actual": "RGB 23.8,51.1,21.8",
+          "suspects": [
+            "renderer",
+            "actors"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "NV 화면이 검은 화면 아님",
+          "ok": true,
+          "actual": "밝기 43.2, 대비 27.5",
+          "suspects": [
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "renderer",
+            "actors"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-stage4-nv-off.png",
+        "screenshots/qa-stage4-nv-on.png"
+      ],
+      "repro": [
+        "`startStage(4)`, `assist({noSway:true})`, 1.5초 대기",
+        "`nv(false)` 상태 drawCalls 최대값·스크린샷(qa-stage4-nv-off.png) → `nv(true)` 후 동일(qa-stage4-nv-on.png)",
+        "drawCalls 증가 ≤ 2, 화면 변화(평균 픽셀 차이), 녹색 톤(G 평균이 R·B보다 큼) 확인"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "VIP(S5)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:27:30.384Z",
+      "durationMs": 16573,
+      "details": [
+        {
+          "type": "note",
+          "text": "시작 vipEta 58.8s (탑승까지 남은 초)"
+        },
+        {
+          "type": "check",
+          "label": "방치(timeScale 8) → missionEnd reason 'escaped'",
+          "ok": true,
+          "expected": "success:false, reason:'escaped' (실제 약 10초)",
+          "actual": "success:false, reason:escaped, 실제 9.8s",
+          "suspects": [
+            "ai",
+            "session"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "escaped까지 실제 9.8s (헤드리스 저FPS면 dt 0.05 상한 때문에 더 걸릴 수 있음)"
+        },
+        {
+          "type": "note",
+          "text": "재시작 경로: DOM"
+        },
+        {
+          "type": "check",
+          "label": "재시작 후 PLAYING",
+          "ok": true,
+          "suspects": [
+            "main",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "VIP 존재",
+          "ok": true,
+          "suspects": [
+            "levels",
+            "ai"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "시도 1: 거리 331m, 속도 1.2m/s, 리드 0.487m → hit vip/body @[-39.97, 1.24, -306.59] dist 330.3m"
+        },
+        {
+          "type": "check",
+          "label": "VIP 사살",
+          "ok": true,
+          "expected": "hit vip",
+          "actual": "hit",
+          "suspects": [
+            "ballistics",
+            "ai"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "missionEnd success(cleared)",
+          "ok": true,
+          "expected": "success:true, reason:'cleared'",
+          "actual": "success:true, reason:cleared, score 3521",
+          "suspects": [
+            "session"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "stars ≥ 1",
+          "ok": true,
+          "actual": 2,
+          "suspects": [
+            "session"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "RESULT 전환",
+          "ok": true,
+          "actual": "RESULT",
+          "suspects": [
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "localStorage sniper.progress.v1 갱신(stars[5] ≥ 1, best[5] = 점수)",
+          "ok": true,
+          "expected": "stars[5] ≥ 1, best[5] = 3521",
+          "actual": "stars {\"5\":2}, best {\"5\":3521}, unlocked 5",
+          "suspects": [
+            "storage",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "ai",
+            "session",
+            "storage",
+            "main"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-vip-result.png"
+      ],
+      "repro": [
+        "`startStage(5)`, `timeScale(8)` 후 방치 → `missionEnd.reason === \"escaped\"` (GDD §9.7: 실제 약 10초)",
+        "RESULT에서 `[data-ui=retry]` 탭 → `[data-ui=begin]` 탭 (없으면 `ui:retry`/`ui:begin` emit)",
+        "`timeScale(1)`, assist 3종, 최대 줌, 사선이 열린 순간 VIP 가슴을 리드 조준해 사격",
+        "missionEnd success·stars ≥ 1, RESULT 후 localStorage `sniper.progress.v1`의 stars[5]·best[5] 갱신 확인"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "성능",
+      "status": "pass",
+      "runAt": "2026-10-04T15:28:44.098Z",
+      "durationMs": 73714,
+      "details": [
+        {
+          "type": "check",
+          "label": "S1 프레임 진행",
+          "ok": true,
+          "actual": "rAF 751프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 drawCalls ≤ 100",
+          "ok": true,
+          "expected": "1~100",
+          "actual": 14,
+          "suspects": [
+            "world",
+            "actors",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 tris ≤ 120000",
+          "ok": true,
+          "expected": "≤ 120000",
+          "actual": 32526,
+          "suspects": [
+            "world",
+            "actors"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S2 프레임 진행",
+          "ok": true,
+          "actual": "rAF 751프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S2 drawCalls ≤ 100",
+          "ok": true,
+          "expected": "1~100",
+          "actual": 17,
+          "suspects": [
+            "world",
+            "actors",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S2 tris ≤ 120000",
+          "ok": true,
+          "expected": "≤ 120000",
+          "actual": 48638,
+          "suspects": [
+            "world",
+            "actors"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S3 프레임 진행",
+          "ok": true,
+          "actual": "rAF 752프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S3 drawCalls ≤ 100",
+          "ok": true,
+          "expected": "1~100",
+          "actual": 19,
+          "suspects": [
+            "world",
+            "actors",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S3 tris ≤ 120000",
+          "ok": true,
+          "expected": "≤ 120000",
+          "actual": 41824,
+          "suspects": [
+            "world",
+            "actors"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 프레임 진행",
+          "ok": true,
+          "actual": "rAF 752프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 drawCalls ≤ 100",
+          "ok": true,
+          "expected": "1~100",
+          "actual": 22,
+          "suspects": [
+            "world",
+            "actors",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 tris ≤ 120000",
+          "ok": true,
+          "expected": "≤ 120000",
+          "actual": 29928,
+          "suspects": [
+            "world",
+            "actors"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 프레임 진행",
+          "ok": true,
+          "actual": "rAF 751프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 drawCalls ≤ 100",
+          "ok": true,
+          "expected": "1~100",
+          "actual": 18,
+          "suspects": [
+            "world",
+            "actors",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 tris ≤ 120000",
+          "ok": true,
+          "expected": "≤ 120000",
+          "actual": 52476,
+          "suspects": [
+            "world",
+            "actors"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 (CPU×4) 프레임 진행",
+          "ok": true,
+          "actual": "rAF 751프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S2 (CPU×4) 프레임 진행",
+          "ok": true,
+          "actual": "rAF 750프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S3 (CPU×4) 프레임 진행",
+          "ok": true,
+          "actual": "rAF 752프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 (CPU×4) 프레임 진행",
+          "ok": true,
+          "actual": "rAF 750프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 (CPU×4) 프레임 진행",
+          "ok": true,
+          "actual": "rAF 748프레임, 게임 fps 144",
+          "suspects": [
+            "main",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "renderer",
+            "world",
+            "actors"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`startStage(N)` (N=1..5), 워밍업 후 5초(--quick 2초) 동안 rAF 프레임 간격과 `stats()` 샘플링",
+        "`page.emulateCPUThrottling(4)`로 반복",
+        "drawCalls ≤ 100, tris ≤ 120000 판정. FPS는 데스크톱 headless(소프트웨어 GL 가능) 기준 상대 비교용"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "수명주기",
+      "status": "pass",
+      "runAt": "2026-10-04T15:29:15.168Z",
+      "durationMs": 31070,
+      "details": [
+        {
+          "type": "note",
+          "text": "메모리(geo/tex) 1회차: S1 11/6, S2 14/7, S3 14/11, S4 16/8, S5 18/9"
+        },
+        {
+          "type": "note",
+          "text": "메모리(geo/tex) 3회차: S1 17/6, S2 19/7, S3 17/11, S4 17/8, S5 18/9"
+        },
+        {
+          "type": "check",
+          "label": "2→3회차 순환에서 스테이지별 geometries(+1 이하)·textures 증가 없음",
+          "ok": true,
+          "expected": "증가 없음",
+          "actual": "S1 +0/+0, S2 +0/+0, S3 +0/+0, S4 +0/+0, S5 +0/+0",
+          "suspects": [
+            "world",
+            "actors",
+            "fx",
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 연속 재로드 5회 후 geometries·textures 증가 없음",
+          "ok": true,
+          "actual": "geo 18→18, tex 9→9",
+          "suspects": [
+            "world",
+            "actors",
+            "renderer"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "첫 순환 뒤 S1 geometries +6 — 처음 쓴 공유 지오메트리가 캐시에 남는 것으로 보임(이후 순환에서 증가 없음 → 누수 아님)"
+        },
+        {
+          "type": "check",
+          "label": "visibilitychange(hidden) → PAUSED",
+          "ok": true,
+          "expected": "PAUSED",
+          "actual": "PAUSED",
+          "suspects": [
+            "pwa",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "visible 복귀 후 PAUSED 유지(자동 재개 안 함)",
+          "ok": true,
+          "actual": "PAUSED",
+          "suspects": [
+            "main",
+            "pwa"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "ui:resume → PLAYING",
+          "ok": true,
+          "actual": "PLAYING",
+          "suspects": [
+            "main",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "WEBGL_lose_context 사용 가능",
+          "ok": true,
+          "actual": "lost",
+          "suspects": [
+            "renderer"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "컨텍스트 손실 → PAUSED",
+          "ok": true,
+          "actual": "PAUSED",
+          "suspects": [
+            "pwa",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "컨텍스트 손실 후 미처리 에러 0개",
+          "ok": true,
+          "actual": "0개",
+          "suspects": [
+            "renderer",
+            "pwa",
+            "main"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "restoreContext 후 상태: TITLE (pwa.js가 복구 시 페이지를 다시 로드하면 TITLE)"
+        },
+        {
+          "type": "check",
+          "label": "컨텍스트 복구 후 미처리 에러 0개",
+          "ok": true,
+          "actual": "0개",
+          "suspects": [
+            "renderer",
+            "pwa"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "pwa",
+            "main",
+            "renderer"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "`startStage(1)` 후 document.hidden=true·visibilityState=hidden으로 바꾸고 visibilitychange 발송 → PAUSED",
+        "visible로 되돌려 다시 발송 → PAUSED 유지 → `ui:resume` → PLAYING",
+        "`WEBGL_lose_context.loseContext()` → PAUSED·미처리 에러 0 → `restoreContext()` 후 미처리 에러 0",
+        "메모리: 스테이지 1→5 순환 3회 + S5 연속 재로드 5회, `stats().geometries/textures`(renderer.info.memory) 기록 → 2·3회차 순환과 연속 재로드에서 값이 늘지 않는지 확인(1회차는 캐시 워밍업)"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "PWA",
+      "status": "pass",
+      "runAt": "2026-10-04T15:29:18.720Z",
+      "durationMs": 3552,
+      "details": [
+        {
+          "type": "check",
+          "label": "navigator.serviceWorker 지원",
+          "ok": true,
+          "suspects": [
+            "pwa"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "serviceWorker.ready (12초 안)",
+          "ok": true,
+          "expected": "활성 SW",
+          "actual": "{\"scope\":\"http://localhost:8123/docs/\",\"active\":true,\"script\":\"http://localhost:8123/docs/sw.js\"}",
+          "suspects": [
+            "pwa",
+            "sw"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "SW scope가 /docs/ (상대경로 등록)",
+          "ok": true,
+          "actual": "http://localhost:8123/docs/",
+          "suspects": [
+            "pwa"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "sw.js MIME text/javascript",
+          "ok": true,
+          "actual": "200 text/javascript; charset=utf-8",
+          "suspects": [
+            "serve"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "페이지가 SW의 제어를 받음(controller)",
+          "ok": true,
+          "suspects": [
+            "sw",
+            "pwa"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "오프라인 reload 후 부팅(TITLE)",
+          "ok": true,
+          "expected": "TITLE",
+          "actual": "TITLE",
+          "suspects": [
+            "sw"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "오프라인 로드 중 실패한 요청 0개(precache 누락 없음)",
+          "ok": true,
+          "actual": "0개",
+          "suspects": [
+            "sw"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "<link rel=\"manifest\"> 존재",
+          "ok": true,
+          "suspects": [
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "manifest 링크가 상대경로",
+          "ok": true,
+          "actual": "manifest.webmanifest",
+          "suspects": [
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "manifest 200 + JSON 파싱",
+          "ok": true,
+          "actual": "200 application/manifest+json; charset=utf-8 ",
+          "suspects": [
+            "manifest"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "manifest 필수 필드(name, short_name, start_url, scope, display, background_color, theme_color, icons)",
+          "ok": true,
+          "actual": "모두 있음",
+          "suspects": [
+            "manifest"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "display가 standalone/fullscreen",
+          "ok": true,
+          "actual": "standalone",
+          "suspects": [
+            "manifest"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "orientation이 landscape 계열",
+          "ok": true,
+          "actual": "landscape",
+          "suspects": [
+            "manifest"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "start_url·scope가 상대경로",
+          "ok": true,
+          "actual": "start_url ./, scope ./",
+          "suspects": [
+            "manifest"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "아이콘 192·512 크기 포함",
+          "ok": true,
+          "actual": "192x192 512x512 512x512",
+          "suspects": [
+            "manifest",
+            "icons"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "manifest 아이콘 파일 모두 200 + image/png",
+          "ok": true,
+          "actual": "3개 정상",
+          "suspects": [
+            "icons"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "manifest MIME application/manifest+json",
+          "ok": true,
+          "actual": "application/manifest+json; charset=utf-8",
+          "suspects": [
+            "serve"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "viewport: width=device-width + viewport-fit=cover",
+          "ok": true,
+          "actual": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover",
+          "suspects": [
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "apple-mobile-web-app-capable 또는 mobile-web-app-capable = yes",
+          "ok": true,
+          "actual": "apple yes, mobile yes",
+          "suspects": [
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "apple-mobile-web-app-status-bar-style 존재",
+          "ok": true,
+          "actual": "black-translucent",
+          "suspects": [
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "theme-color 존재",
+          "ok": true,
+          "actual": "#000",
+          "suspects": [
+            "html"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "apple-touch-icon 링크 + 파일 200 PNG",
+          "ok": true,
+          "actual": "icons/apple-touch-icon-180.png 200 image/png",
+          "suspects": [
+            "html",
+            "icons"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "정리: SW 1개 unregister, 캐시 삭제"
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "sw",
+            "manifest",
+            "html",
+            "pwa"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-pwa-offline.png"
+      ],
+      "repro": [
+        "`?sw=1&debug`로 접속 (autotest는 nosw를 강제하므로 사용하지 않음)",
+        "`navigator.serviceWorker.ready`와 controller 확인 (첫 로드에 controller가 없으면 1회 reload)",
+        "`page.setOfflineMode(true)` 후 reload → `__SNIPER__` 부팅·TITLE 확인, 실패한 요청 목록 확인",
+        "manifest fetch·파싱(필드, 상대경로, 아이콘 파일), 메타 태그, apple-touch-icon 확인 → 끝나면 SW unregister·캐시 삭제"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "PC 데스크톱(마우스·키보드)",
+      "status": "pass",
+      "runAt": "2026-10-04T15:29:28.671Z",
+      "durationMs": 9951,
+      "details": [
+        {
+          "type": "note",
+          "text": "미디어: pointer coarse=false, fine=true"
+        },
+        {
+          "type": "check",
+          "label": "데스크톱에서 #rotate 숨김",
+          "ok": true,
+          "actual": "숨김",
+          "suspects": [
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "Space → 발사(shot)",
+          "ok": true,
+          "expected": "shot",
+          "actual": "shot 1개",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "E → 스코프 켜짐(fov 감소)",
+          "ok": true,
+          "actual": "scoped false→true, fov 50→8",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "Q → 줌 단계 변경",
+          "ok": true,
+          "actual": "zoomIdx 0→1",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "휠 위 → zoom +1",
+          "ok": true,
+          "expected": "zoomIdx 0→1",
+          "actual": "zoomIdx 0→1, scoped true",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "휠 아래 → zoom −1",
+          "ok": true,
+          "expected": "zoomIdx 1→0",
+          "actual": "zoomIdx 1→0, scoped true",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "Shift 누르는 동안 숨참기(holding)",
+          "ok": true,
+          "actual": "누름 true, 뗌 false",
+          "suspects": [
+            "input",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "R → 재장전 시작",
+          "ok": true,
+          "actual": "mag 4/5, reload 이벤트 [{\"phase\":\"start\"}]",
+          "suspects": [
+            "input",
+            "weapon"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "N → 야간투시 켜짐(nv{on:true})",
+          "ok": true,
+          "actual": "[{\"on\":true}]",
+          "suspects": [
+            "input",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "N 다시 → 야간투시 꺼짐",
+          "ok": true,
+          "actual": "[{\"on\":false}]",
+          "suspects": [
+            "input",
+            "main"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "포인터 잠금: canvas#gl, 첫 클릭에서 발사=false"
+        },
+        {
+          "type": "check",
+          "label": "마우스 좌클릭 → 발사",
+          "ok": true,
+          "actual": "shot 1개",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "마우스 우클릭 → 스코프 전환",
+          "ok": true,
+          "actual": "scoped false→true",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "포인터 잠금 중 마우스 오른쪽 이동 → yaw 감소(≈120·fov/화면높이 ±50%)",
+          "ok": true,
+          "expected": "0.0233rad 감소",
+          "actual": "yaw 0→-0.0233 (fov 8)",
+          "suspects": [
+            "input"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "Esc → 일시정지(PAUSED)",
+          "ok": true,
+          "actual": "PAUSED",
+          "suspects": [
+            "input",
+            "main"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "MIME: .js → text/javascript",
+          "ok": true,
+          "actual": "200 text/javascript; charset=utf-8",
+          "suspects": [
+            "serve"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "MIME: .webmanifest → application/manifest+json",
+          "ok": true,
+          "actual": "200 application/manifest+json; charset=utf-8",
+          "suspects": [
+            "serve"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "input",
+            "serve"
+          ]
+        }
+      ],
+      "evidence": [],
+      "repro": [
+        "데스크톱 1280×720(마우스·키보드, 터치 없음)으로 `?autotest&nosw&seed=1` 접속, `startStage(4)`, assist 3종, 안전한 지면 조준",
+        "Space(발사), E(스코프), Q(줌), 휠 위/아래(zoom ±1), Shift(숨참기), R(재장전), N(야간투시), 좌클릭(발사), 우클릭(스코프), Esc(일시정지) 입력 후 weapon 상태·이벤트 확인",
+        "`js/main.js`, `manifest.webmanifest`의 Content-Type 확인 (tools/serve.py MIME)"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "이미지 확인",
+      "status": "pass",
+      "runAt": "2026-10-04T15:29:47.891Z",
+      "durationMs": 19220,
+      "details": [
+        {
+          "type": "check",
+          "label": "S1 인게임 버튼 표시",
+          "ok": true,
+          "actual": "6개",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 인게임 버튼끼리 겹치지 않음",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "hud",
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 버튼이 모두 화면 안",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 화면 중앙(조준점 ±30px)을 가리는 버튼 없음",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 버튼이 다른 요소에 가려지지 않음",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "hud",
+            "css"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "S1 버튼 배치: pause(8,8 46×46) scope(8,312 60×60) zoom(76,312 60×60) reload(144,312 60×60) breath(654,304 68×68) fire(732,276 96×96)"
+        },
+        {
+          "type": "check",
+          "label": "S1 비조준 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 123.2, 대비 43.4 ",
+          "suspects": [
+            "renderer",
+            "world"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S1 스코프 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 60.7, 대비 77.1 ",
+          "suspects": [
+            "renderer",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S2 비조준 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 113.5, 대비 46 ",
+          "suspects": [
+            "renderer",
+            "world"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S2 스코프 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 38.1, 대비 50.1 ",
+          "suspects": [
+            "renderer",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S3 비조준 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 153.4, 대비 59.1 ",
+          "suspects": [
+            "renderer",
+            "world"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S3 스코프 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 64.8, 대비 87.5 ",
+          "suspects": [
+            "renderer",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 인게임 버튼 표시",
+          "ok": true,
+          "actual": "7개",
+          "suspects": [
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 인게임 버튼끼리 겹치지 않음",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "hud",
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 버튼이 모두 화면 안",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 화면 중앙(조준점 ±30px)을 가리는 버튼 없음",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "css"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 버튼이 다른 요소에 가려지지 않음",
+          "ok": true,
+          "actual": "없음",
+          "suspects": [
+            "hud",
+            "css"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "S4 버튼 배치: pause(8,8 46×46) scope(8,312 60×60) zoom(76,312 60×60) reload(144,312 60×60) nv(212,312 60×60) breath(654,304 68×68) fire(732,276 96×96)"
+        },
+        {
+          "type": "check",
+          "label": "S4 비조준 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 38.2, 대비 36.9 ",
+          "suspects": [
+            "renderer",
+            "world"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S4 스코프 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 33.5, 대비 44 ",
+          "suspects": [
+            "renderer",
+            "hud"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 비조준 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 137.9, 대비 48 ",
+          "suspects": [
+            "renderer",
+            "world"
+          ]
+        },
+        {
+          "type": "check",
+          "label": "S5 스코프 화면이 검은/단색 화면 아님",
+          "ok": true,
+          "actual": "밝기 39.2, 대비 58.9 ",
+          "suspects": [
+            "renderer",
+            "hud"
+          ]
+        },
+        {
+          "type": "note",
+          "text": "스크린샷은 사람이 직접 열어 확인해야 함: 표적이 보이는지, UI 겹침, 이상한 색/깨짐"
+        },
+        {
+          "type": "check",
+          "label": "미처리 에러(pageerror·console.error) 0개",
+          "ok": true,
+          "expected": "0개",
+          "actual": "0개",
+          "suspects": [
+            "renderer",
+            "world",
+            "actors",
+            "hud",
+            "css"
+          ]
+        }
+      ],
+      "evidence": [
+        "screenshots/qa-stage1-hip.png",
+        "screenshots/qa-stage1-scope.png",
+        "screenshots/qa-stage2-hip.png",
+        "screenshots/qa-stage2-scope.png",
+        "screenshots/qa-stage3-hip.png",
+        "screenshots/qa-stage3-scope.png",
+        "screenshots/qa-stage4-hip.png",
+        "screenshots/qa-stage4-scope.png",
+        "screenshots/qa-stage4-scope-nv.png",
+        "screenshots/qa-stage5-hip.png",
+        "screenshots/qa-stage5-scope.png"
+      ],
+      "repro": [
+        "스테이지 1~5마다 `startStage(N)`, `assist({noSway:true})`, 1.5초 대기 후 `qa-stageN-hip.png`",
+        "첫 필수 표적 가슴 `aimAt` + 최대 줌 스코프 1초 후 `qa-stageN-scope.png`",
+        "자동 분석(밝기·대비) + 인게임 버튼 배치(겹침·화면 밖·중앙 가림) 확인. 이미지는 사람이 직접 열어 확인"
+      ]
+    }
+  ],
+  "perf": [
+    {
+      "stage": 1,
+      "throttled": false,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.6,
+      "frames": 751,
+      "gameFps": 144,
+      "gameP95": 7.2,
+      "drawCalls": 14,
+      "tris": 32526,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 2,
+      "throttled": false,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.6,
+      "frames": 751,
+      "gameFps": 144,
+      "gameP95": 7.2,
+      "drawCalls": 17,
+      "tris": 48638,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 3,
+      "throttled": false,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.8,
+      "frames": 752,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 19,
+      "tris": 41824,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 4,
+      "throttled": false,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.5,
+      "frames": 752,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 22,
+      "tris": 29928,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 5,
+      "throttled": false,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.6,
+      "frames": 751,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 18,
+      "tris": 52476,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 1,
+      "throttled": true,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.4,
+      "frames": 751,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 14,
+      "tris": 32526,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 2,
+      "throttled": true,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.6,
+      "frames": 750,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 17,
+      "tris": 48638,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 3,
+      "throttled": true,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.94,
+      "maxFrameMs": 7.7,
+      "frames": 752,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 19,
+      "tris": 41824,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 4,
+      "throttled": true,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.95,
+      "maxFrameMs": 13.9,
+      "frames": 750,
+      "gameFps": 144,
+      "gameP95": 7.1,
+      "drawCalls": 22,
+      "tris": 29928,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    },
+    {
+      "stage": 5,
+      "throttled": true,
+      "fps": 144,
+      "p95": 7.1,
+      "frameMsAvg": 6.95,
+      "maxFrameMs": 13.9,
+      "frames": 748,
+      "gameFps": 144,
+      "gameP95": 7.2,
+      "drawCalls": 18,
+      "tris": 52476,
+      "pixelRatio": 2,
+      "pixelRatioMin": 2
+    }
+  ],
+  "memory": [
+    {
+      "cycle": 1,
+      "stage": 1,
+      "geometries": 11,
+      "textures": 6,
+      "drawCalls": 14
+    },
+    {
+      "cycle": 1,
+      "stage": 2,
+      "geometries": 14,
+      "textures": 7,
+      "drawCalls": 17
+    },
+    {
+      "cycle": 1,
+      "stage": 3,
+      "geometries": 14,
+      "textures": 11,
+      "drawCalls": 19
+    },
+    {
+      "cycle": 1,
+      "stage": 4,
+      "geometries": 16,
+      "textures": 8,
+      "drawCalls": 22
+    },
+    {
+      "cycle": 1,
+      "stage": 5,
+      "geometries": 18,
+      "textures": 9,
+      "drawCalls": 18
+    },
+    {
+      "cycle": 2,
+      "stage": 1,
+      "geometries": 17,
+      "textures": 6,
+      "drawCalls": 14
+    },
+    {
+      "cycle": 2,
+      "stage": 2,
+      "geometries": 19,
+      "textures": 7,
+      "drawCalls": 17
+    },
+    {
+      "cycle": 2,
+      "stage": 3,
+      "geometries": 17,
+      "textures": 11,
+      "drawCalls": 19
+    },
+    {
+      "cycle": 2,
+      "stage": 4,
+      "geometries": 17,
+      "textures": 8,
+      "drawCalls": 22
+    },
+    {
+      "cycle": 2,
+      "stage": 5,
+      "geometries": 18,
+      "textures": 9,
+      "drawCalls": 18
+    },
+    {
+      "cycle": 3,
+      "stage": 1,
+      "geometries": 17,
+      "textures": 6,
+      "drawCalls": 14
+    },
+    {
+      "cycle": 3,
+      "stage": 2,
+      "geometries": 19,
+      "textures": 7,
+      "drawCalls": 17
+    },
+    {
+      "cycle": 3,
+      "stage": 3,
+      "geometries": 17,
+      "textures": 11,
+      "drawCalls": 19
+    },
+    {
+      "cycle": 3,
+      "stage": 4,
+      "geometries": 17,
+      "textures": 8,
+      "drawCalls": 22
+    },
+    {
+      "cycle": 3,
+      "stage": 5,
+      "geometries": 18,
+      "textures": 9,
+      "drawCalls": 18
+    },
+    {
+      "cycle": "S5×5",
+      "stage": 5,
+      "geometries": 18,
+      "textures": 9,
+      "drawCalls": 18
+    }
+  ],
+  "images": [
+    {
+      "file": "screenshots/qa-title.png",
+      "scenario": 1,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        25,
+        28.4,
+        36.2
+      ],
+      "lum": 28.3,
+      "std": 31.9,
+      "darkFrac": 0.328,
+      "centerLum": 72.9,
+      "centerStd": 59.7,
+      "flags": []
+    },
+    {
+      "file": "screenshots/qa-stage4-nv-off.png",
+      "scenario": 10,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        35.7,
+        37.5,
+        52
+      ],
+      "lum": 38.1,
+      "std": 36.8,
+      "darkFrac": 0.07,
+      "centerLum": 43.7,
+      "centerStd": 32,
+      "flags": []
+    },
+    {
+      "file": "screenshots/qa-stage4-nv-on.png",
+      "scenario": 10,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        23.8,
+        51.1,
+        21.8
+      ],
+      "lum": 43.2,
+      "std": 27.5,
+      "darkFrac": 0.016,
+      "centerLum": 55.9,
+      "centerStd": 28.9,
+      "flags": []
+    },
+    {
+      "file": "screenshots/qa-stage1-hip.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        118.6,
+        124.6,
+        122.7
+      ],
+      "lum": 123.2,
+      "std": 43.4,
+      "darkFrac": 0.006,
+      "centerLum": 129.1,
+      "centerStd": 38.2,
+      "flags": [],
+      "stage": 1,
+      "view": "hip"
+    },
+    {
+      "file": "screenshots/qa-stage1-scope.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        65,
+        59.8,
+        56.2
+      ],
+      "lum": 60.7,
+      "std": 77.1,
+      "darkFrac": 0.552,
+      "centerLum": 180.1,
+      "centerStd": 45.4,
+      "flags": [],
+      "stage": 1,
+      "view": "scope",
+      "aim": "t1"
+    },
+    {
+      "file": "screenshots/qa-stage2-hip.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        147.8,
+        106.6,
+        81.6
+      ],
+      "lum": 113.5,
+      "std": 46,
+      "darkFrac": 0.009,
+      "centerLum": 101.7,
+      "centerStd": 44.1,
+      "flags": [],
+      "stage": 2,
+      "view": "hip"
+    },
+    {
+      "file": "screenshots/qa-stage2-scope.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        52.3,
+        35.1,
+        26.3
+      ],
+      "lum": 38.1,
+      "std": 50.1,
+      "darkFrac": 0.602,
+      "centerLum": 110.4,
+      "centerStd": 15.5,
+      "flags": [],
+      "stage": 2,
+      "view": "scope",
+      "aim": "t1"
+    },
+    {
+      "file": "screenshots/qa-stage3-hip.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        171.4,
+        150.3,
+        132
+      ],
+      "lum": 153.4,
+      "std": 59.1,
+      "darkFrac": 0.004,
+      "centerLum": 155.8,
+      "centerStd": 40.9,
+      "flags": [],
+      "stage": 3,
+      "view": "hip"
+    },
+    {
+      "file": "screenshots/qa-stage3-scope.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        73.3,
+        63.8,
+        48.7
+      ],
+      "lum": 64.8,
+      "std": 87.5,
+      "darkFrac": 0.586,
+      "centerLum": 186,
+      "centerStd": 54,
+      "flags": [],
+      "stage": 3,
+      "view": "scope",
+      "aim": "t1"
+    },
+    {
+      "file": "screenshots/qa-stage4-hip.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        35.8,
+        37.5,
+        52
+      ],
+      "lum": 38.2,
+      "std": 36.9,
+      "darkFrac": 0.07,
+      "centerLum": 43.7,
+      "centerStd": 32,
+      "flags": [],
+      "stage": 4,
+      "view": "hip"
+    },
+    {
+      "file": "screenshots/qa-stage4-scope.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        33.2,
+        32.8,
+        41.4
+      ],
+      "lum": 33.5,
+      "std": 44,
+      "darkFrac": 0.58,
+      "centerLum": 84.2,
+      "centerStd": 26.2,
+      "flags": [],
+      "stage": 4,
+      "view": "scope",
+      "aim": "t1"
+    },
+    {
+      "file": "screenshots/qa-stage4-scope-nv.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        25.7,
+        46.8,
+        23.4
+      ],
+      "lum": 40.6,
+      "std": 48.1,
+      "darkFrac": 0.574,
+      "centerLum": 105.2,
+      "centerStd": 26.4,
+      "flags": [],
+      "stage": 4,
+      "view": "scope+nv"
+    },
+    {
+      "file": "screenshots/qa-stage5-hip.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        149.1,
+        136.3,
+        121.4
+      ],
+      "lum": 137.9,
+      "std": 48,
+      "darkFrac": 0.007,
+      "centerLum": 129.3,
+      "centerStd": 28.7,
+      "flags": [],
+      "stage": 5,
+      "view": "hip"
+    },
+    {
+      "file": "screenshots/qa-stage5-scope.png",
+      "scenario": 16,
+      "w": 2532,
+      "h": 1170,
+      "mean": [
+        43.1,
+        39,
+        29.2
+      ],
+      "lum": 39.2,
+      "std": 58.9,
+      "darkFrac": 0.581,
+      "centerLum": 97.9,
+      "centerStd": 74.5,
+      "flags": [],
+      "stage": 5,
+      "view": "scope",
+      "aim": "vip"
+    }
+  ],
+  "env": {
+    "base": "http://localhost:8123/docs/",
+    "chrome": "Chrome/154.0.8037.93",
+    "node": "v24.18.0",
+    "quick": false,
+    "only": [],
+    "headless": true
+  }
+}

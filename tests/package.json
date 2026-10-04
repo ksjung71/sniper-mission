@@ -1,0 +1,13 @@
+{
+  "name": "sniper-game-tests",
+  "private": true,
+  "type": "module",
+  "description": "스나이퍼 미션 자동 테스트 (설치된 Chrome을 puppeteer-core로 구동)",
+  "scripts": {
+    "smoke": "node smoke.mjs",
+    "qa": "node qa.mjs"
+  },
+  "dependencies": {
+    "puppeteer-core": "^25.12.0"
+  }
+}

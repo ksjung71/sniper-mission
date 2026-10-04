@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>스나이퍼 미션 제작 기록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans+KR:wght@400;600;700&display=swap">
+<style>
+/* 레이아웃: 작전 브리핑 문서 — 좁은 본문 칼럼(약 68자) + 넓은 그림·표 칼럼. 섹션은 실제 작업 순서가 있는 곳만 단계 코드를 붙임 */
+:root {
+  --paper: #eef2f7;  --sheet: #ffffff;  --ink: #0f1b2d;  --muted: #56667c;  --line: #d3dce7;
+  --fire: #d9590b;   --scope: #0b7f97;  --ok: #13795b;   --warn: #a35f00;  --hold: #8a96a8;
+  --ink-soft: #24344c; --tint: #e3eaf3;
+  --f-display: "Black Han Sans", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --f-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --step--1: 0.8125rem; --step-0: 1rem; --step-1: 1.1875rem; --step-2: 1.5rem; --step-3: 2.125rem; --step-4: clamp(2.25rem, 5.2vw, 3.6rem);
+  --wrap: 1120px; --text: 44rem;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --paper: #0a111d; --sheet: #111b2b; --ink: #e6edf6; --muted: #93a3b8; --line: #23324a;
+  --fire: #ff8a2a; --scope: #36cfe8; --ok: #3fcf98; --warn: #f0b04a; --hold: #6c7a90; --ink-soft: #c5d1e0; --tint: #16233a;
+  color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --paper: #0a111d; --sheet: #111b2b; --ink: #e6edf6; --muted: #93a3b8; --line: #23324a;
+  --fire: #ff8a2a; --scope: #36cfe8; --ok: #3fcf98; --warn: #f0b04a; --hold: #6c7a90; --ink-soft: #c5d1e0; --tint: #16233a;
+  color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 var(--step-0)/1.7 var(--f-body); padding-inline: 16px; word-break: keep-all; overflow-wrap: anywhere; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--scope); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--fire); outline-offset: 2px; }
+code, .mono { font-family: var(--f-mono); font-size: 0.92em; }
+code { background: var(--tint); padding: 0.05em 0.35em; border-radius: 4px; }
+.wrap { max-width: var(--wrap); margin-inline: auto; }
+h1, h2 { font-family: var(--f-display); font-weight: 400; letter-spacing: 0.01em; text-wrap: balance; margin: 0; }
+h3 { font-size: var(--step-1); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.eyebrow { font: 600 var(--step--1)/1.4 var(--f-mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--scope); }
+.lead { font-size: var(--step-1); color: var(--ink-soft); max-width: var(--text); }
+.muted { color: var(--muted); }
+.prose { max-width: var(--text); display: grid; gap: 0.9rem; }
+
+/* 상단 목차 */
+.topnav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--paper); border-bottom: 1px solid var(--line); margin-inline: -16px; padding: 10px 16px; }
+.topnav .wrap { display: flex; gap: 6px 18px; flex-wrap: wrap; align-items: center; font-size: var(--step--1); }
+.topnav b { font-family: var(--f-display); font-weight: 400; font-size: 1rem; margin-right: auto; }
+.topnav a { color: var(--muted); text-decoration: none; }
+.topnav a:hover { color: var(--fire); }
+
+/* 히어로 */
+.hero { padding-block: 44px 28px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 36px; align-items: center; }
+.hero h1 { font-size: var(--step-4); line-height: 1.08; margin-block: 10px 16px; }
+.hero h1 em { font-style: normal; color: var(--fire); }
+.facts { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+.facts div { display: grid; }
+.facts dt { font-size: var(--step--1); color: var(--muted); }
+.facts dd { margin: 0; font: 600 var(--step-2)/1.2 var(--f-mono); font-variant-numeric: tabular-nums; }
+.facts dd small { font-size: 0.55em; color: var(--muted); font-weight: 500; }
+.scopeframe { position: relative; border-radius: 10px; overflow: hidden; background: #000; box-shadow: 0 18px 40px rgba(10, 20, 40, 0.28); }
+.scopeframe::before, .scopeframe::after { content: ""; position: absolute; width: 26px; height: 26px; border: 3px solid var(--fire); pointer-events: none; }
+.scopeframe::before { left: 10px; top: 10px; border-right: 0; border-bottom: 0; }
+.scopeframe::after { right: 10px; bottom: 10px; border-left: 0; border-top: 0; }
+.cap { font-size: var(--step--1); color: var(--muted); margin-top: 8px; }
+
+/* 섹션 */
+section { padding-block: 44px; border-top: 1px solid var(--line); display: grid; gap: 22px; scroll-margin-top: 56px; }
+section > header { display: grid; gap: 6px; }
+section h2 { font-size: var(--step-3); line-height: 1.2; }
+
+/* 스테이지 갤러리 */
+.stages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+.stage { display: grid; gap: 8px; align-content: start; min-width: 0; }
+.stage img { border-radius: 8px; aspect-ratio: 844 / 390; object-fit: cover; width: 100%; background: var(--tint); }
+.stage h3 { font-size: 1rem; }
+.stage h3 span { font-family: var(--f-mono); color: var(--fire); margin-right: 6px; }
+.stage p { font-size: var(--step--1); color: var(--muted); line-height: 1.55; }
+.stage .rng { font-family: var(--f-mono); font-size: 0.75rem; color: var(--scope); }
+.pair { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.pair figure { margin: 0; min-width: 0; }
+.pair img { border-radius: 8px; }
+
+/* 다이어그램 */
+.diagram { overflow-x: auto; background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 14px; }
+.diagram svg { display: block; min-width: 760px; width: 100%; height: auto; }
+svg text { font-family: var(--f-body); fill: var(--ink); }
+svg .t-muted { fill: var(--muted); }
+svg .t-mono { font-family: var(--f-mono); }
+svg .node { fill: var(--sheet); stroke: var(--line); stroke-width: 1.5; }
+svg .node-pm { fill: var(--tint); stroke: var(--fire); stroke-width: 2; }
+svg .node-user { fill: var(--sheet); stroke: var(--scope); stroke-width: 1.5; stroke-dasharray: 5 4; }
+svg .wire { stroke: var(--hold); stroke-width: 1.5; fill: none; }
+svg .wire-s { stroke: var(--scope); stroke-width: 1.5; fill: none; stroke-dasharray: 4 4; }
+svg .bar-pm { fill: var(--fire); }
+svg .bar-ag { fill: var(--scope); }
+svg .bar-fix { fill: var(--warn); }
+svg .bar-hold { fill: var(--hold); opacity: 0.35; }
+svg .grid { stroke: var(--line); stroke-width: 1; }
+svg .gap { fill: var(--tint); }
+svg .mk { fill: var(--fire); }
+
+/* 단계 목록 */
+.phases { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.phases li { display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; gap: 4px 16px; padding-block: 14px; border-bottom: 1px solid var(--line); align-items: baseline; }
+.phases .code { font: 600 var(--step-1)/1 var(--f-mono); color: var(--fire); }
+.phases h3 { font-size: 1.05rem; }
+.phases p { grid-column: 2 / 4; color: var(--ink-soft); font-size: 0.95rem; max-width: 52rem; }
+.phases time { font: 500 var(--step--1) var(--f-mono); color: var(--muted); white-space: nowrap; }
+.phases .now .code { color: var(--scope); }
+.chip { display: inline-block; font: 600 0.72rem/1 var(--f-mono); padding: 4px 7px; border-radius: 99px; border: 1px solid currentColor; vertical-align: 2px; margin-left: 6px; }
+.chip.ok { color: var(--ok); } .chip.wait { color: var(--scope); } .chip.warn { color: var(--warn); }
+
+/* 표 */
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--sheet); }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: var(--step--1); color: var(--muted); font-weight: 600; background: var(--tint); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+td .file { font-family: var(--f-mono); font-size: 0.82rem; color: var(--muted); }
+
+/* 두 칼럼 블록 */
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+.block { background: var(--sheet); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.block h3 { display: flex; align-items: baseline; gap: 8px; }
+ol.steps, ul.ticks { margin: 0; padding-left: 1.3rem; display: grid; gap: 6px; }
+ul.ticks { list-style: none; padding-left: 0; }
+ul.ticks li { padding-left: 1.4rem; position: relative; }
+ul.ticks li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 9px; height: 9px; border: 2px solid var(--scope); border-radius: 50%; }
+.keys { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 14px; font-size: 0.92rem; }
+kbd { font: 600 0.8rem var(--f-mono); padding: 2px 7px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 5px; background: var(--paper); white-space: nowrap; }
+.callout { border-left: 3px solid var(--fire); background: var(--sheet); padding: 12px 16px; border-radius: 0 8px 8px 0; max-width: var(--text); }
+.callout b { color: var(--fire); }
+pre { margin: 0; background: var(--tint); border-radius: 8px; padding: 12px 14px; overflow-x: auto; font: 500 0.82rem/1.6 var(--f-mono); }
+footer { padding-block: 32px 48px; border-top: 1px solid var(--line); color: var(--muted); font-size: var(--step--1); }
+
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-top: 28px; }
+  .stages { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .pair { grid-template-columns: 1fr; }
+  .cols { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .stages { grid-template-columns: 1fr; }
+  .phases li { grid-template-columns: 44px minmax(0, 1fr); }
+  .phases time { grid-column: 2; }
+  .phases p { grid-column: 1 / 3; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+</head>
+<body>
+
+<nav class="topnav" aria-label="목차">
+  <div class="wrap">
+    <b>스나이퍼 미션</b>
+    <a href="#game">게임</a><a href="#team">팀</a><a href="#flow">작업 방식</a><a href="#qa">검증</a><a href="#pc">PC 테스트</a><a href="#iphone">아이폰 설치</a><a href="#reuse">팀 다시 쓰기</a>
+  </div>
+</nav>
+
+<main class="wrap">
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Claude Code 에이전트 팀 · 2026-10-04</p>
+      <h1>스나이퍼 미션<br><em>제작 기록</em></h1>
+      <p class="lead">아이폰에서 가볍게 도는 컬러 3D 1인칭 저격 게임을 에이전트 6명이 나눠 만든 과정입니다. App Store 없이 웹앱(PWA)으로 설치하고, 폰에 올리기 전에 PC에서 먼저 테스트합니다.</p>
+      <dl class="facts">
+        <div><dt>미션</dt><dd>5<small> 스테이지</small></dd></div>
+        <div><dt>배포 용량</dt><dd>1.16<small> MB</small></dd></div>
+        <div><dt>자동 테스트</dt><dd>16/16<small> 통과</small></dd></div>
+        <div><dt>드로우콜(최대)</dt><dd>22<small> / 예산 100</small></dd></div>
+      </dl>
+    </div>
+    <figure style="margin:0">
+      <div class="scopeframe"><img src="assets/s5-scope.jpg" alt="스테이지 5 스코프 화면. 14배율로 328m 떨어진 호텔 앞 VIP와 경호원 2명이 레티클 중앙에 보인다" width="1200" height="555"></div>
+      <figcaption class="cap">스테이지 5 · 14배율 스코프, 거리 329m. 레티클 점 간격(1 mil)이 이 거리에서 약 33cm입니다. 타이머·탑승 카운트다운·바람은 스코프 원 밖으로 비켜납니다.</figcaption>
+    </figure>
+  </header>
+
+  <section id="game">
+    <header>
+      <p class="eyebrow">결과물</p>
+      <h2>무엇을 만들었나</h2>
+    </header>
+    <div class="prose">
+      <p>옥상에 엎드린 저격수가 되어 스코프로 표적을 찾고, 숨을 참아 흔들림을 줄인 뒤 한 발로 임무를 끝내는 게임입니다. 탄은 초속 850m로 실제로 날아가서 움직이는 표적은 앞을 겨눠야 하고, 4·5스테이지는 중력 낙차와 바람이 더해집니다. 빗나간 탄이 근처에 떨어지면 표적이 눈치채고 출구로 달아납니다.</p>
+      <p>Three.js로 만든 로우폴리 3D이고 그림자·후처리를 쓰지 않아 가볍습니다. 배포물은 Three.js 750KB, 게임 코드 170KB, 아이콘을 합쳐 약 1.16MB입니다.</p>
+    </div>
+    <div class="stages">
+      <article class="stage">
+        <img src="assets/s1-hip.jpg" alt="스테이지 1 낮 도심, 옥상에서 내려다본 색색의 빌딩과 사거리" width="844" height="390" loading="lazy">
+        <h3><span>1</span>첫 임무</h3>
+        <p>낮 도심 · 정지한 표적 2명. 단계별 힌트가 조작을 알려 줍니다.</p>
+        <span class="rng">100–144 m</span>
+      </article>
+      <article class="stage">
+        <img src="assets/s2-hip.jpg" alt="스테이지 2 노을 항구, 운하 건너 컨테이너 야적장과 크레인" width="844" height="390" loading="lazy">
+        <h3><span>2</span>노을 부두</h3>
+        <p>컨테이너 사이를 순찰하는 표적. 숨는 구간을 피해 멈출 때를 노립니다.</p>
+        <span class="rng">173–237 m</span>
+      </article>
+      <article class="stage">
+        <img src="assets/s3-hip.jpg" alt="스테이지 3 시장 광장, 알록달록한 노점 차양" width="844" height="390" loading="lazy">
+        <h3><span>3</span>빨간 모자</h3>
+        <p>인파 속 빨간 모자 2명. 민간인을 맞히면 즉시 실패합니다.</p>
+        <span class="rng">162–197 m</span>
+      </article>
+      <article class="stage">
+        <img src="assets/s4-hip.jpg" alt="스테이지 4 야간 창고 단지, 불 켜진 창문과 가로등" width="844" height="390" loading="lazy">
+        <h3><span>4</span>야간 창고</h3>
+        <p>야간투시 사용. 바람 3m/s와 낙차를 처음 보정합니다.</p>
+        <span class="rng">199–246 m</span>
+      </article>
+      <article class="stage">
+        <img src="assets/s5-hip.jpg" alt="스테이지 5 호텔 앞, 멀리 큰 호텔과 진입로" width="844" height="390" loading="lazy">
+        <h3><span>5</span>VIP 저지</h3>
+        <p>경호받는 VIP가 약 59초 뒤 차에 탑니다. 25배율, 바람 4m/s.</p>
+        <span class="rng">318–332 m</span>
+      </article>
+    </div>
+    <div class="pair">
+      <figure><img src="assets/menu-select.jpg" alt="작전 선택 화면. 스테이지 1만 열려 있고 2~5는 잠김" width="844" height="390" loading="lazy"><figcaption class="cap">작전 선택. 클리어하면 다음 스테이지가 열리고 별점이 저장됩니다.</figcaption></figure>
+      <figure><img src="assets/s4-nv.jpg" alt="스테이지 4 야간투시 스코프. 녹색 화면에 인물이 밝게 보인다" width="844" height="390" loading="lazy"><figcaption class="cap">야간투시. 추가 렌더링 없이 조명과 안개 색만 바꿔 가볍습니다.</figcaption></figure>
+      <figure><img src="assets/result.jpg" alt="임무 성공 결과 화면. 점수 내역과 별 3개" width="844" height="390" loading="lazy"><figcaption class="cap">결과 화면. 사살·헤드샷·거리·남은 시간·명중률로 점수를 나눠 보여 줍니다.</figcaption></figure>
+    </div>
+  </section>
+
+  <section id="team">
+    <header>
+      <p class="eyebrow">조직</p>
+      <h2>에이전트 팀</h2>
+    </header>
+    <div class="prose">
+      <p>PM(메인 세션)이 사용자와 소통하고, 다섯 전문 에이전트가 각자 맡은 파일만 고칩니다. 같은 파일을 두 명이 동시에 만지지 않도록 폴더 단위로 담당을 나눴습니다. 설계 단계에서는 Plan 에이전트가 인터페이스와 성능 예산을 검토했습니다.</p>
+    </div>
+    <div class="diagram" role="img" aria-label="팀 구조도: 사용자와 PM, PM 아래 다섯 에이전트와 각 담당 파일">
+      <svg viewBox="0 0 1000 330" xmlns="http://www.w3.org/2000/svg">
+        <rect class="node-user" x="420" y="8" width="160" height="44" rx="8"/>
+        <text x="500" y="35" text-anchor="middle" font-size="15" font-weight="700">사용자</text>
+        <path class="wire-s" d="M500 52 V82"/>
+        <rect class="node-pm" x="360" y="82" width="280" height="66" rx="10"/>
+        <text x="500" y="108" text-anchor="middle" font-size="16" font-weight="700">PM · 오케스트레이터</text>
+        <text x="500" y="130" text-anchor="middle" font-size="12" class="t-muted">계약서·뼈대 코드·통합·PC 도구·보고서</text>
+        <rect class="node-user" x="760" y="90" width="210" height="50" rx="8"/>
+        <text x="865" y="111" text-anchor="middle" font-size="13" font-weight="700">Plan 에이전트</text>
+        <text x="865" y="128" text-anchor="middle" font-size="11" class="t-muted">설계 검토 (계획 단계)</text>
+        <path class="wire-s" d="M640 115 H760"/>
+        <path class="wire" d="M500 148 V180 M100 180 H900 M100 180 V200 M300 180 V200 M500 180 V200 M700 180 V200 M900 180 V200"/>
+        <g font-size="14">
+          <rect class="node" x="12" y="200" width="176" height="118" rx="10"/>
+          <text x="100" y="226" text-anchor="middle" font-weight="700">game-designer</text>
+          <text x="100" y="246" text-anchor="middle" font-size="12" class="t-muted">기획서·레벨 데이터</text>
+          <text x="100" y="276" text-anchor="middle" font-size="11" class="t-mono t-muted">GDD.md 351</text>
+          <text x="100" y="294" text-anchor="middle" font-size="11" class="t-mono t-muted">levels.js 239</text>
+
+          <rect class="node" x="212" y="200" width="176" height="118" rx="10"/>
+          <text x="300" y="226" text-anchor="middle" font-weight="700">graphics-dev</text>
+          <text x="300" y="246" text-anchor="middle" font-size="12" class="t-muted">3D 월드·인물·이펙트</text>
+          <text x="300" y="276" text-anchor="middle" font-size="11" class="t-mono t-muted">js/gfx/* 912</text>
+          <text x="300" y="294" text-anchor="middle" font-size="11" class="t-mono t-muted">테마 5 · 외형 9</text>
+
+          <rect class="node" x="412" y="200" width="176" height="118" rx="10"/>
+          <text x="500" y="226" text-anchor="middle" font-weight="700">gameplay-dev</text>
+          <text x="500" y="246" text-anchor="middle" font-size="12" class="t-muted">조준·탄도·AI·점수</text>
+          <text x="500" y="276" text-anchor="middle" font-size="11" class="t-mono t-muted">js/game/* 691</text>
+          <text x="500" y="294" text-anchor="middle" font-size="11" class="t-mono t-muted">판정 1/120초 적분</text>
+
+          <rect class="node" x="612" y="200" width="176" height="118" rx="10"/>
+          <text x="700" y="226" text-anchor="middle" font-weight="700">mobile-ios-dev</text>
+          <text x="700" y="246" text-anchor="middle" font-size="12" class="t-muted">화면·입력·사운드·PWA</text>
+          <text x="700" y="276" text-anchor="middle" font-size="11" class="t-mono t-muted" id="ui-lines">js/ui/* 738 + css 343</text>
+          <text x="700" y="294" text-anchor="middle" font-size="11" class="t-mono t-muted">터치·PC·자이로</text>
+
+          <rect class="node" x="812" y="200" width="176" height="118" rx="10"/>
+          <text x="900" y="226" text-anchor="middle" font-weight="700">qa-tester</text>
+          <text x="900" y="246" text-anchor="middle" font-size="12" class="t-muted">자동 테스트·성능</text>
+          <text x="900" y="276" text-anchor="middle" font-size="11" class="t-mono t-muted">qa.mjs 1450</text>
+          <text x="900" y="294" text-anchor="middle" font-size="11" class="t-mono t-muted">시나리오 16</text>
+        </g>
+      </svg>
+    </div>
+    <p class="cap">숫자는 각 파일의 줄 수입니다. 역할 정의는 <code>.claude/agents/*.md</code>에 저장돼 있어 다시 쓸 수 있습니다.</p>
+  </section>
+
+  <section id="flow">
+    <header>
+      <p class="eyebrow">작업 방식</p>
+      <h2>계약을 먼저 고정하고 동시에 개발</h2>
+    </header>
+    <div class="prose">
+      <p>여러 에이전트가 동시에 코드를 쓰면 서로 맞물리지 않는 것이 가장 큰 위험입니다. 그래서 PM이 개발 전에 두 가지를 먼저 만들었습니다. 모듈 사이의 약속을 적은 <b>인터페이스 계약서</b>(<code>design/CONTRACT.md</code>)와, 그 약속대로 이미 끝까지 돌아가는 <b>뼈대 게임</b>입니다. 뼈대 상태에서도 조준 → 발사 → 122m 헤드샷 → 임무 성공까지 동작했습니다.</p>
+      <p>각 에이전트는 뼈대에서 자기 파일의 속만 바꿨습니다. 계약을 바꿔야 할 때는 직접 고치지 않고 PM에게 요청했고, PM이 판단해 계약서 버전을 올렸습니다.</p>
+    </div>
+
+    <div class="diagram" role="img" aria-label="시간대별 작업 막대 그래프. 11시 20분부터 16시 30분까지, 13시 10분부터 15시 42분까지는 사용량 한도로 중단">
+      <svg viewBox="0 0 1000 300" xmlns="http://www.w3.org/2000/svg">
+        <!-- 축: 11:20~13:15(4.5px/분, x=150~667.5), 끊김 40px, 15:35~16:35(x=707.5~977.5) -->
+        <rect class="gap" x="667.5" y="18" width="40" height="262"/>
+        <text x="687.5" y="150" text-anchor="middle" font-size="11" class="t-muted" transform="rotate(-90 687.5 150)">중단 2시간 32분</text>
+        <g class="grid">
+          <line x1="195" y1="22" x2="195" y2="276"/><line x1="330" y1="22" x2="330" y2="276"/><line x1="465" y1="22" x2="465" y2="276"/><line x1="600" y1="22" x2="600" y2="276"/>
+          <line x1="752.5" y1="22" x2="752.5" y2="276"/><line x1="820" y1="22" x2="820" y2="276"/><line x1="887.5" y1="22" x2="887.5" y2="276"/><line x1="955" y1="22" x2="955" y2="276"/>
+        </g>
+        <g font-size="11" class="t-mono t-muted" text-anchor="middle">
+          <text x="195" y="14" class="t-muted t-mono">11:30</text><text x="330" y="14" class="t-muted t-mono">12:00</text><text x="465" y="14" class="t-muted t-mono">12:30</text><text x="600" y="14" class="t-muted t-mono">13:00</text>
+          <text x="752.5" y="14" class="t-muted t-mono">15:45</text><text x="820" y="14" class="t-muted t-mono">16:00</text><text x="887.5" y="14" class="t-muted t-mono">16:15</text><text x="955" y="14" class="t-muted t-mono">16:30</text>
+        </g>
+        <g font-size="13" font-weight="600">
+          <text x="10" y="45">사용자</text><text x="10" y="79">PM · Plan</text><text x="10" y="113">game-designer</text><text x="10" y="147">graphics-dev</text>
+          <text x="10" y="181">gameplay-dev</text><text x="10" y="215">mobile-ios-dev</text><text x="10" y="249">qa-tester</text>
+        </g>
+        <!-- 사용자 개입 지점 -->
+        <path class="mk" d="M150 32 l8 8 -8 8 -8 -8z"/><path class="mk" d="M231 32 l8 8 -8 8 -8 -8z"/>
+        <text x="160" y="62" font-size="10" class="t-muted">요구사항</text><text x="241" y="62" font-size="10" class="t-muted">Unity 확인·PC 테스트 요청</text>
+        <!-- PM / Plan -->
+        <rect class="bar-ag" x="172.5" y="68" width="54" height="16" rx="3"/>
+        <rect class="bar-pm" x="253.5" y="68" width="175.5" height="16" rx="3"/>
+        <rect class="bar-pm" x="555" y="68" width="4.5" height="16" rx="2"/>
+        <rect class="bar-pm" x="833.5" y="68" width="31.5" height="16" rx="3"/>
+        <rect class="bar-pm" x="892" y="68" width="63" height="16" rx="3"/>
+        <!-- designer -->
+        <rect class="bar-ag" x="438" y="102" width="94.5" height="16" rx="3"/>
+        <!-- graphics -->
+        <rect class="bar-ag" x="559.5" y="136" width="85.5" height="16" rx="3"/><rect class="bar-hold" x="645" y="136" width="22.5" height="16"/>
+        <rect class="bar-ag" x="739" y="136" width="94.5" height="16" rx="3"/>
+        <!-- gameplay -->
+        <rect class="bar-ag" x="559.5" y="170" width="76.5" height="16" rx="3"/>
+        <!-- mobile -->
+        <rect class="bar-ag" x="559.5" y="204" width="85.5" height="16" rx="3"/><rect class="bar-hold" x="645" y="204" width="22.5" height="16"/>
+        <rect class="bar-ag" x="739" y="204" width="40.5" height="16" rx="3"/>
+        <rect class="bar-fix" x="883" y="204" width="18" height="16" rx="3"/>
+        <!-- qa -->
+        <rect class="bar-ag" x="559.5" y="238" width="85.5" height="16" rx="3"/><rect class="bar-hold" x="645" y="238" width="22.5" height="16"/>
+        <rect class="bar-ag" x="739" y="238" width="45" height="16" rx="3"/>
+        <rect class="bar-ag" x="833.5" y="238" width="49.5" height="16" rx="3"/>
+        <!-- 범례 -->
+        <g font-size="11">
+          <rect class="bar-pm" x="150" y="282" width="14" height="10" rx="2"/><text x="170" y="291" class="t-muted">PM 작업</text>
+          <rect class="bar-ag" x="250" y="282" width="14" height="10" rx="2"/><text x="270" y="291" class="t-muted">에이전트 작업</text>
+          <rect class="bar-fix" x="380" y="282" width="14" height="10" rx="2"/><text x="400" y="291" class="t-muted">QA 지적 수정</text>
+          <rect class="bar-hold" x="505" y="282" width="14" height="10"/><text x="525" y="291" class="t-muted">사용량 한도로 일시 중단</text>
+        </g>
+      </svg>
+    </div>
+    <p class="cap">13:10에 사용량 한도로 세 에이전트를 멈췄다가 15:42에 같은 맥락으로 재개했습니다. 그 사이 작업은 없었습니다. 시각은 <code>design/workflow-log.md</code> 기록입니다.</p>
+
+    <ol class="phases">
+      <li><span class="code">0</span><h3>준비 — 계약서와 뼈대 게임</h3><time>11:43–12:22</time>
+        <p>Three.js r185를 내려받아 넣고, 모든 모듈을 이미 동작하는 뼈대로 작성했습니다. PC 테스트 도구(<code>play_pc.bat</code>, <code>tools/serve.py</code>)와 자동 테스트 기반(<code>tests/smoke.mjs</code>)도 이때 만들었습니다.</p></li>
+      <li><span class="code">A</span><h3>기획 — game-designer</h3><time>12:24–12:45</time>
+        <p>기획서와 5스테이지 데이터를 작성했습니다. 별점 기준은 "전원 헤드샷·빠른 클리어"와 "몸통 사살·보통 속도" 두 가지 플레이를 가정해 점수를 계산해서 정했습니다.</p></li>
+      <li><span class="code">B</span><h3>개발 — 4명 동시 진행</h3><time>12:51–16:03</time>
+        <p>graphics·gameplay·mobile이 각자 폴더를 맡고, qa-tester는 같은 시간에 테스트 코드를 썼습니다. gameplay-dev는 17분 만에 끝나 낙차 예측과 실제 값이 0.1346m로 일치함을 확인했습니다.</p></li>
+      <li><span class="code">C</span><h3>통합 — PM</h3><time>16:03–16:10</time>
+        <p>문법 검사, 5스테이지 스모크(에러 0), 메뉴와 스테이지별 맨눈·스코프 화면 13장을 직접 확인했습니다. 배포 용량은 1.16MB입니다.</p></li>
+      <li><span class="code">D</span><h3>검증 — qa-tester → 담당자</h3><time>16:03–16:18</time>
+        <p>16개 시나리오가 모두 통과했고 메모리 누수도 없었습니다. 사람 눈으로 본 화면에서 경미한 UI 문제 2건(결과 화면에 남는 안내 문구, 스코프 위쪽을 덮는 안내)이 나와 mobile-ios-dev가 4분 만에 고쳤고, 해당 시나리오를 다시 돌려 통과를 확인했습니다.</p></li>
+      <li class="now"><span class="code">D2</span><h3>PC 확인 — 사용자 <span class="chip wait">대기</span></h3><time>—</time>
+        <p>사용자가 <code>play_pc.bat</code>으로 직접 플레이하고 의견을 줍니다. 의견이 있으면 담당 에이전트가 고치고 다시 확인합니다. 여기서 OK가 나와야 배포합니다.</p></li>
+      <li><span class="code">E</span><h3>배포 — GitHub Pages <span class="chip wait">대기</span></h3><time>—</time>
+        <p>저장소를 만들고 push(사용자 확인 후)한 뒤, 아이폰 Safari에서 홈 화면에 추가합니다.</p></li>
+    </ol>
+
+    <h3>계약서가 바뀐 기록</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>버전</th><th>요청한 에이전트</th><th>바뀐 내용</th><th>이유</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">v1.0</td><td>PM</td><td>최초 계약: 좌표 규약, 모듈 API, 이벤트 18종, 성능 예산</td><td>병렬 개발의 기준</td></tr>
+          <tr><td class="mono">v1.1</td><td>game-designer</td><td>이동 경로 의미, 소품 치수표, 건물 배치 금지 구역 확장(경로·차량·도주로)</td><td>걸어가는 인물이 건물을 뚫고 지나가지 않게</td></tr>
+          <tr><td class="mono">v1.2</td><td>gameplay-dev</td><td>VIP 남은 시간, 명중 수, 숨 참기 상태의 정확한 의미</td><td>HUD가 같은 뜻으로 표시하게</td></tr>
+          <tr><td class="mono">v1.3</td><td>qa-tester</td><td>잠긴 카드 표기, PC 첫 클릭 규칙, 테스트 모드의 잠금 표시</td><td>자동 테스트가 모호함 없이 판정하게</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="qa">
+    <header>
+      <p class="eyebrow">검증</p>
+      <h2>자동 테스트 16개 모두 통과</h2>
+    </header>
+    <div class="prose">
+      <p>qa-tester가 설치된 Chrome을 아이폰 가로 화면(844×390, 터치)으로 흉내 내 실제 탭과 드래그로 테스트했습니다. 결과는 <code>tests/QA_REPORT.md</code>에 있습니다.</p>
+    </div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>시나리오</th><th>확인한 것</th><th>결과</th></tr></thead>
+        <tbody>
+          <tr><td>부팅 · 세로 화면</td><td>에러 0, 세로로 들면 "가로로 돌려주세요"와 자동 일시정지</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>실제 터치 흐름</td><td>탭으로 타이틀 → 작전 선택(2~5 잠김) → 브리핑 → 플레이</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>조작</td><td>드래그 방향, 스코프·줌, 볼트 동안 연사 차단, 5발 후 재장전</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>탄도</td><td>헤드샷 판정, 이동 표적 리드 사격, 중력 낙차(예측 0.135m)</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>규칙</td><td>민간인 오사 실패, 근처 착탄 시 경계·도주, VIP 탈출 실패와 저지 성공</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>야간투시 · 수명주기</td><td>NV 켜도 드로우콜 그대로, 백그라운드 전환 시 일시정지, WebGL 손실 복구</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>PWA</td><td>서비스워커 설치 후 오프라인 재실행, manifest·아이콘·메타 태그</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>PC 조작</td><td>마우스 잠금 조준, 클릭 발사, 휠 줌, Shift/R/N/Esc</td><td><span class="chip ok">통과</span></td></tr>
+          <tr><td>메모리</td><td>스테이지 1→5 순환 3회, 5스테이지 재로드 10회 후에도 GPU 자원 수 고정</td><td><span class="chip ok">누수 없음</span></td></tr>
+          <tr><td>화면 육안 확인</td><td>결과 화면에 안내 문구 잔상, 스코프 위쪽 안내 겹침</td><td><span class="chip ok">수정 후 통과</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>성능 (PC 헤드리스 측정, 아이폰 실측 아님)</h3>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>스테이지</th><th class="num">드로우콜</th><th class="num">삼각형</th><th class="num">p95 프레임</th><th class="num">CPU 4배 느리게 · p95</th><th class="num">CPU 4배 · 최대</th></tr></thead>
+        <tbody>
+          <tr><td>1 도심</td><td class="num">14</td><td class="num">29,444</td><td class="num">7.1 ms</td><td class="num">7.1 ms</td><td class="num">20.7 ms</td></tr>
+          <tr><td>2 항구</td><td class="num">17</td><td class="num">45,026</td><td class="num">7.1 ms</td><td class="num">7.1 ms</td><td class="num">27.9 ms</td></tr>
+          <tr><td>3 시장</td><td class="num">19</td><td class="num">35,624</td><td class="num">7.1 ms</td><td class="num">7.1 ms</td><td class="num">14.0 ms</td></tr>
+          <tr><td>4 야간</td><td class="num">22</td><td class="num">26,316</td><td class="num">7.1 ms</td><td class="num">13.8 ms</td><td class="num">21.0 ms</td></tr>
+          <tr><td>5 VIP</td><td class="num">18</td><td class="num">47,558</td><td class="num">7.1 ms</td><td class="num">14.0 ms</td><td class="num">48.5 ms</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="cap">예산은 드로우콜 100, 삼각형 12만입니다. 이 PC는 화면 주사율 144Hz에 프레임이 묶여 있어서, 부하 차이는 CPU를 4배 느리게 했을 때의 프레임 시간으로 봅니다. 그 기준으로 4·5스테이지가 가장 무거워 아이폰에서 먼저 확인할 대상입니다. 아이폰에서는 프레임이 밀리면 해상도를 자동으로 낮춥니다.</p>
+
+    <div class="callout"><b>실기기에서만 확인할 수 있는 것.</b> 자이로 조준 방향, 무음 모드에서 효과음, 노치·홈 바와 버튼 간격, 실제 FPS와 발열(특히 4·5스테이지), 홈 화면 앱의 전체 화면·오프라인 실행. PC 에뮬레이션으로는 판정할 수 없어 배포 후 직접 확인이 필요합니다.</div>
+  </section>
+
+  <section id="pc">
+    <header>
+      <p class="eyebrow">배포 전 단계</p>
+      <h2>PC에서 먼저 테스트하기</h2>
+    </header>
+    <div class="cols">
+      <div class="block">
+        <h3>실행</h3>
+        <ol class="steps">
+          <li>탐색기에서 <code>C:\MyWork\Claude_PJT\Sniper_Game\play_pc.bat</code>을 더블클릭합니다.</li>
+          <li>번호를 고릅니다. <b>1</b> 일반 플레이, <b>2</b> 테스트 모드(모든 스테이지 열림, FPS 표시), <b>3</b> 같은 Wi-Fi의 아이폰에서 접속.</li>
+          <li>Chrome에서 <span class="mono">http://localhost:8123/docs/</span>가 열립니다.</li>
+          <li>끝낼 때는 작업 표시줄의 "Sniper Server" 창을 닫습니다.</li>
+        </ol>
+        <p class="muted">아이폰 화면 배치 보기: 게임에서 <kbd>F12</kbd> → <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>M</kbd> → iPhone 기종 선택 → 가로 회전.</p>
+      </div>
+      <div class="block">
+        <h3>PC 조작</h3>
+        <div class="keys">
+          <kbd>클릭</kbd><span>마우스 잠금(첫 클릭은 발사하지 않음)</span>
+          <kbd>마우스 이동</kbd><span>조준</span>
+          <kbd>좌클릭</kbd><span>발사 (대체: <kbd>Space</kbd>)</span>
+          <kbd>우클릭</kbd><span>스코프 켜기·끄기 (대체: <kbd>E</kbd>)</span>
+          <kbd>휠</kbd><span>줌 확대·축소 (대체: <kbd>Q</kbd>)</span>
+          <kbd>Shift</kbd><span>누르고 있으면 숨 참기 — 최대 3초</span>
+          <kbd>R</kbd><span>재장전</span>
+          <kbd>N</kbd><span>야간투시 (4스테이지)</span>
+          <kbd>Esc</kbd><span>일시정지</span>
+        </div>
+      </div>
+    </div>
+    <div class="block" style="max-width:var(--text)">
+      <h3>확인해 주실 것</h3>
+      <ul class="ticks">
+        <li>5스테이지를 끝까지 진행할 수 있는지</li>
+        <li>조준·스코프·숨 참기의 손맛과 난이도</li>
+        <li>그래픽과 프레임(테스트 모드 왼쪽 위 숫자)</li>
+        <li>효과음, 결과 화면과 별점 저장</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="iphone">
+    <header>
+      <p class="eyebrow">PC 확인이 끝난 뒤</p>
+      <h2>아이폰에 설치하기</h2>
+    </header>
+    <div class="cols">
+      <div class="block">
+        <h3>1. GitHub Pages에 올리기</h3>
+        <ol class="steps">
+          <li>github.com에 로그인하고 <b>New repository</b>로 <span class="mono">sniper-game</span> 저장소를 <b>Public</b>으로 만듭니다.</li>
+          <li>PC에서 프로젝트 폴더를 올립니다. Claude에게 "push 해줘"라고 하면 확인 후 진행합니다. 브라우저로 GitHub 로그인 창이 한 번 뜹니다.</li>
+          <li>저장소 <b>Settings → Pages</b>에서 Source를 <b>Deploy from a branch</b>, 브랜치 <span class="mono">main</span>, 폴더 <span class="mono">/docs</span>로 저장합니다.</li>
+          <li>1~2분 뒤 <span class="mono">https://&lt;아이디&gt;.github.io/sniper-game/</span>이 열립니다.</li>
+        </ol>
+      </div>
+      <div class="block">
+        <h3>2. 홈 화면에 추가</h3>
+        <ol class="steps">
+          <li>아이폰 <b>Safari</b>로 위 주소를 엽니다.</li>
+          <li>아래 공유 버튼(□↑) → <b>홈 화면에 추가</b>. "웹 앱으로 열기"는 켠 채로 둡니다.</li>
+          <li>홈 화면의 "스나이퍼" 아이콘으로 실행합니다.</li>
+          <li>제어 센터에서 <b>세로 화면 고정</b>을 끄고 폰을 가로로 듭니다. 소리는 무음 모드를 해제하면 들립니다.</li>
+        </ol>
+        <p class="muted">한 번 온라인으로 실행하면 그다음부터는 비행기 모드에서도 열립니다. 자이로 조준은 설정에서 켜고 권한을 허용합니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="reuse">
+    <header>
+      <p class="eyebrow">다음 작업</p>
+      <h2>같은 팀 다시 쓰기</h2>
+    </header>
+    <div class="prose">
+      <p>역할 정의 5개가 <code>.claude/agents/</code>에 있어서, 이 폴더에서 Claude Code를 열면 팀을 그대로 부를 수 있습니다. 각 정의에는 먼저 읽을 문서, 담당 파일, 성능 예산, 끝내기 전 자가 점검이 들어 있습니다.</p>
+    </div>
+<pre>cd C:\MyWork\Claude_PJT\Sniper_Game
+claude
+&gt; graphics-dev 에이전트로 2스테이지 하늘을 더 붉게 바꿔줘
+&gt; game-designer와 gameplay-dev로 6번째 스테이지(눈 내리는 산장)를 추가해줘
+&gt; qa-tester로 전체 테스트 돌리고 결과 알려줘</pre>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>문서</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">design/CONTRACT.md</td><td>모듈 인터페이스 계약 v1.3 — 개발 전 반드시 읽는 기준</td></tr>
+          <tr><td class="mono">design/GDD.md</td><td>기획서: 메커닉 수치, 점수·별점 계산, 스테이지 설계</td></tr>
+          <tr><td class="mono">design/INSTALL.md</td><td>PC 테스트, GitHub Pages 배포, 아이폰 설치, 문제 해결</td></tr>
+          <tr><td class="mono">design/workflow-log.md</td><td>이 보고서의 시간 기록 원본</td></tr>
+          <tr><td class="mono">tests/QA_REPORT.md</td><td>자동 테스트 결과와 성능·메모리 표</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">스나이퍼 미션 v1.0.0 · Three.js r185 (MIT) · 제작: Claude Code 에이전트 팀 · 보고서 작성 2026-10-04</div>
+</footer>
+</body>
+</html>

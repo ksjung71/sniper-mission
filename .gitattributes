@@ -1,0 +1,5 @@
+# 줄바꿈 고정: 소스는 LF, Windows 배치는 CRLF(cmd.exe 요구). 이미지는 바이너리
+* text=auto eol=lf
+*.bat text eol=crlf
+*.png binary
+*.jpg binary
